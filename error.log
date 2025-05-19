@@ -1,0 +1,17 @@
+[Mon May 19 09:08:16 EDT 2025] ERROR: Error during email sending
+java.nio.file.NoSuchFileException: TEST
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:116)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:219)
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:371)
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:422)
+	at java.base/java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:420)
+	at java.base/java.nio.file.Files.newInputStream(Files.java:156)
+	at java.base/java.nio.file.Files.newBufferedReader(Files.java:2839)
+	at java.base/java.nio.file.Files.readAllLines(Files.java:3330)
+	at java.base/java.nio.file.Files.readAllLines(Files.java:3370)
+	at com.ssuman.bulkmail.SendMail.readLines(SendMail.java:105)
+	at com.ssuman.bulkmail.SendMail.sendBulkEmails(SendMail.java:44)
+	at com.ssuman.bulkmail.SendMailFrame.lambda$startSending$9(SendMailFrame.java:122)
+	at java.base/java.lang.Thread.run(Thread.java:834)
