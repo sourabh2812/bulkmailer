@@ -15,3 +15,57 @@ java.nio.file.NoSuchFileException: TEST
 	at com.ssuman.bulkmail.SendMail.sendBulkEmails(SendMail.java:44)
 	at com.ssuman.bulkmail.SendMailFrame.lambda$startSending$9(SendMailFrame.java:122)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+[Sun Jul 06 11:20:49 EDT 2025] ERROR: Failed to send to xpertunlockllc@gmail.com
+javax.mail.MessagingException: Could not convert socket to TLS;
+  nested exception is:
+	javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake
+	at com.sun.mail.smtp.SMTPTransport.startTLS(SMTPTransport.java:2155)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:752)
+	at javax.mail.Service.connect(Service.java:388)
+	at javax.mail.Service.connect(Service.java:246)
+	at javax.mail.Service.connect(Service.java:195)
+	at javax.mail.Transport.send0(Transport.java:254)
+	at javax.mail.Transport.send(Transport.java:124)
+	at com.ssuman.bulkmail.SendMail.sendEmail(SendMail.java:163)
+	at com.ssuman.bulkmail.SendMail.sendEmailTask(SendMail.java:144)
+	at com.ssuman.bulkmail.SendMail.lambda$sendBulkEmails$0(SendMail.java:80)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: javax.net.ssl.SSLHandshakeException: Remote host terminated the handshake
+	at java.base/sun.security.ssl.SSLSocketImpl.handleEOF(SSLSocketImpl.java:1538)
+	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1377)
+	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1278)
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:401)
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:373)
+	at com.sun.mail.util.SocketFetcher.configureSSLSocket(SocketFetcher.java:626)
+	at com.sun.mail.util.SocketFetcher.startTLS(SocketFetcher.java:553)
+	at com.sun.mail.smtp.SMTPTransport.startTLS(SMTPTransport.java:2150)
+	... 13 more
+Caused by: java.io.EOFException: SSL peer shut down incorrectly
+	at java.base/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:483)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:472)
+	at java.base/sun.security.ssl.SSLSocketInputRecord.decode(SSLSocketInputRecord.java:160)
+	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:110)
+	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1369)
+	... 19 more
+[Sun Jul 06 11:20:53 EDT 2025] ERROR: Failed to send to worthwireless@gmail.com
+javax.mail.AuthenticationFailedException: [EOF]
+	at com.sun.mail.smtp.SMTPTransport$Authenticator.authenticate(SMTPTransport.java:965)
+	at com.sun.mail.smtp.SMTPTransport.authenticate(SMTPTransport.java:876)
+	at com.sun.mail.smtp.SMTPTransport.protocolConnect(SMTPTransport.java:780)
+	at javax.mail.Service.connect(Service.java:388)
+	at javax.mail.Service.connect(Service.java:246)
+	at javax.mail.Service.connect(Service.java:195)
+	at javax.mail.Transport.send0(Transport.java:254)
+	at javax.mail.Transport.send(Transport.java:124)
+	at com.ssuman.bulkmail.SendMail.sendEmail(SendMail.java:163)
+	at com.ssuman.bulkmail.SendMail.sendEmailTask(SendMail.java:144)
+	at com.ssuman.bulkmail.SendMail.lambda$sendBulkEmails$0(SendMail.java:80)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+[Sun Jul 06 13:25:35 EDT 2025] WARNING: Skipping invalid email: Here is the list with the first 100 emails removed:
+[Sun Jul 06 13:25:35 EDT 2025] WARNING: Skipping invalid email: ```

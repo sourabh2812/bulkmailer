@@ -7,7 +7,9 @@ import javax.mail.internet.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SendMail {
 
@@ -22,6 +24,7 @@ public class SendMail {
     private static final String LOG_FILE = "error.log";
     private static final Object pauseLock = new Object();
     private static final AtomicBoolean paused = new AtomicBoolean(false);
+    private static Properties props;
 
     public static void pause() {
         paused.set(true);
@@ -36,8 +39,8 @@ public class SendMail {
 
     public static String sendBulkEmails(String emailFile, String contentFile, String cc, String subject,
                                         String attachmentPath, ProgressListener listener) {
-        String result = "success";
-        int sentCount = 0;
+        AtomicReference<String> result = new AtomicReference<>("success");
+        final int[] sentCount = {0};
         int batchCounter = 0;
 
         try {
@@ -60,6 +63,11 @@ public class SendMail {
                 listener.onStart(total);
             }
 
+            // Create the ExecutorService based on the pool size from properties
+            ExecutorService executorService = Executors.newFixedThreadPool(Integer.parseInt(props.getProperty("mail.send.thread.pool.size", "10")));
+
+            // Process emails concurrently
+            List<Future<AtomicReference<String>>> futures = new ArrayList<>();
             for (String email : emailList) {
                 synchronized (pauseLock) {
                     while (paused.get()) {
@@ -73,32 +81,49 @@ public class SendMail {
                     continue;
                 }
 
-                result = attachmentPath.isEmpty()
-                        ? sendEmail(email, emailContent, cc, subject)
-                        : sendEmailWithAttachment(email, emailContent, cc, subject, attachmentPath);
+                // Submit the email sending task to the ExecutorService
+                String finalEmail = email;
+                Future<AtomicReference<String>> future = executorService.submit(() -> {
+                    if (attachmentPath.isEmpty()) {
+                        result.set(sendEmail(finalEmail, emailContent, cc, subject));
+                    } else {
+                        result.set(sendEmailWithAttachment(finalEmail, emailContent, cc, subject, attachmentPath));
+                    }
 
-                sentCount++;
+                    // Update progress in a thread-safe manner
+                    synchronized (Objects.requireNonNull(listener)) {
+                        sentCount[0]++;
+                        listener.onProgress(sentCount[0], total);
+                    }
+
+                    return result;
+                });
+                futures.add(future);
+
                 batchCounter++;
-                if (listener != null) {
-                    listener.onProgress(sentCount, total);
-                }
-
                 if (batchCounter == batchSize) {
                     Thread.sleep(waitTime);
                     batchCounter = 0;
                 }
             }
 
+            // Wait for all email sending tasks to complete
+            for (Future<AtomicReference<String>> future : futures) {
+                future.get(); // This will block until all emails are sent
+            }
+
+            executorService.shutdown(); // Shutdown the executor after completing all tasks
+
         } catch (Exception e) {
             logError("Error during email sending", e);
-            result = "failure";
+            result.set("failure");
         }
 
-        return result;
+        return result.get();
     }
 
     private static void loadConfiguration() throws IOException {
-        Properties props = new Properties();
+        props = new Properties();
         File configFile = new File("config.properties");
         if (!configFile.exists()) throw new FileNotFoundException("config.properties not found");
 

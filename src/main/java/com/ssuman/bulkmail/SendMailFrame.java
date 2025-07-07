@@ -76,50 +76,49 @@ public class SendMailFrame extends JFrame {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        // Increased spacing: 10 pixels all sides
-        gbc.insets = new Insets(10, 10, 10, 10);
+        // Reduced padding to make the window more compact
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         int row = 0;
-        gbc.gridx = 0; gbc.gridy = row; panel.add(lblTo, gbc);
-        gbc.gridx = 1; panel.add(txtEmailFile, gbc);
-        gbc.gridx = 2; panel.add(btnBrowseTo, gbc);
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(lblTo, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.5; gbc.weighty = 0.1; panel.add(txtEmailFile, gbc);
+        gbc.gridx = 2; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(btnBrowseTo, gbc);
 
         row++;
-        gbc.gridx = 0; gbc.gridy = row; panel.add(lblCC, gbc);
-        gbc.gridx = 1; gbc.gridwidth = 2; panel.add(txtCC, gbc); gbc.gridwidth = 1;
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(lblCC, gbc);
+        gbc.gridx = 1; gbc.gridwidth = 2; gbc.weightx = 0.5; gbc.weighty = 0.1; panel.add(txtCC, gbc); gbc.gridwidth = 1;
 
         row++;
-        gbc.gridx = 0; gbc.gridy = row; panel.add(lblSubject, gbc);
-        gbc.gridx = 1; gbc.gridwidth = 2; panel.add(txtSubject, gbc); gbc.gridwidth = 1;
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(lblSubject, gbc);
+        gbc.gridx = 1; gbc.gridwidth = 2; gbc.weightx = 0.5; gbc.weighty = 0.1; panel.add(txtSubject, gbc); gbc.gridwidth = 1;
 
         row++;
-        gbc.gridx = 0; gbc.gridy = row; panel.add(lblContent, gbc);
-        gbc.gridx = 1; panel.add(txtContentFile, gbc);
-        gbc.gridx = 2; panel.add(btnBrowseContent, gbc);
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(lblContent, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.5; gbc.weighty = 0.1; panel.add(txtContentFile, gbc);
+        gbc.gridx = 2; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(btnBrowseContent, gbc);
 
         row++;
-        gbc.gridx = 0; gbc.gridy = row; panel.add(lblAttachment, gbc);
-        gbc.gridx = 1; panel.add(txtAttachment, gbc);
-        gbc.gridx = 2; panel.add(btnBrowseAttachment, gbc);
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(lblAttachment, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.5; gbc.weighty = 0.1; panel.add(txtAttachment, gbc);
+        gbc.gridx = 2; gbc.weightx = 0.2; gbc.weighty = 0.1; panel.add(btnBrowseAttachment, gbc);
 
         row++;
-        gbc.gridx = 0; gbc.gridy = row; panel.add(btnSend, gbc);
-        gbc.gridx = 1; panel.add(btnPause, gbc);
-        gbc.gridx = 2; panel.add(btnResume, gbc);
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.33; gbc.weighty = 0.2; panel.add(btnSend, gbc);
+        gbc.gridx = 1; gbc.weightx = 0.33; gbc.weighty = 0.2; panel.add(btnPause, gbc);
+        gbc.gridx = 2; gbc.weightx = 0.33; gbc.weighty = 0.2; panel.add(btnResume, gbc);
 
         row++;
-        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 3;
-        panel.add(lblProgress, gbc);
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 3; gbc.weightx = 1; gbc.weighty = 0.2; panel.add(lblProgress, gbc);
 
         row++;
-        gbc.gridx = 0; gbc.gridy = row;
-        panel.add(lblAuthor, gbc);
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 3; gbc.weightx = 1; gbc.weighty = 0.1; panel.add(lblAuthor, gbc);
 
         add(panel);
 
-        setSize(600, 400);
+        setMinimumSize(new Dimension(600, 400));
         setLocationRelativeTo(null);
+        setResizable(false);  // Allow window resizing
     }
 
     private void chooseFile(JTextField targetField) {
@@ -193,14 +192,12 @@ public class SendMailFrame extends JFrame {
                     new SendMail.ProgressListener() {
                         @Override
                         public void onStart(int total) {
-                            SwingUtilities.invokeLater(() ->
-                                    lblProgress.setText("Sent: 0 / " + total + " (Remaining: " + total + ")"));
+                            SwingUtilities.invokeLater(() -> lblProgress.setText("Sent: 0 / " + total + " (Remaining: " + total + ")"));
                         }
 
                         @Override
                         public void onProgress(int sent, int total) {
-                            SwingUtilities.invokeLater(() ->
-                                    lblProgress.setText("Sent: " + sent + " / " + total + " (Remaining: " + (total - sent) + ")"));
+                            SwingUtilities.invokeLater(() -> lblProgress.setText("Sent: " + sent + " / " + total + " (Remaining: " + (total - sent) + ")"));
                         }
                     });
 
